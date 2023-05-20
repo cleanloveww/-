@@ -1,0 +1,78 @@
+#include <stdio.h>
+#define MAXSIZE 100 // 循环队列的最大长度
+typedef struct
+{
+	int data[MAXSIZE]; // 循环队列的元素存储空间
+	int front; // 队头指针
+	int rear; // 队尾指针
+}SqQueue;
+void InitQueue(SqQueue *q); // 初始化循环队列
+int QueueEmpty(SqQueue *q); // 判断循环队列是否为空
+int QueueFull(SqQueue *q); // 判断循环队列是否为满
+int EnQueue(SqQueue *q, int e); // 入队
+int DeQueue(SqQueue *q, int *e); // 出队
+void InitQueue(SqQueue *q)
+{
+	q->front = q->rear = 0;
+}
+int QueueEmpty(SqQueue *q)
+{
+	if(q->front == q->rear)
+		return 1;
+	else
+		return 0;
+}
+int QueueFull(SqQueue *q)
+{
+	if((q->rear+1)%MAXSIZE == q->front)
+		return 1;
+	else
+		return 0;
+}
+
+int EnQueue(SqQueue *q, int e)
+{
+	if(QueueFull(q))
+		return 0;
+	q->data[q->rear] = e;
+	q->rear = (q->rear+1)%MAXSIZE;
+	return 1;
+}
+int DeQueue(SqQueue *q, int *e)
+{
+	if(QueueEmpty(q))
+		return 0;
+	*e = q->data[q->front];
+	q->front = (q->front+1)%MAXSIZE;
+	return 1;
+}
+int main()
+{
+	SqQueue q;
+	InitQueue(&q);
+	
+	printf("判断队列是否为空：%d\n", QueueEmpty(&q));
+	int n=0,i=0,j=0;
+	printf("请输入你入栈的数据个数");
+	scanf("%d",&n);
+	for(i=1;i<=n;i++){
+		printf("请输入你需要入栈的第%d个数",i);
+		scanf("%d",&j);
+		EnQueue(&q,j);
+	}
+	
+	printf("判断队列是否为空：%d\n", QueueEmpty(&q));
+	
+	printf("判断队列是否为满：%d\n", QueueFull(&q));
+	
+	printf("出队顺序为：");
+	while(!QueueEmpty(&q))
+	{
+		int e;
+		DeQueue(&q, &e);
+		printf("%d ", e);
+	}
+	printf("\n");
+	printf("判断队列是否为空：%d\n", QueueEmpty(&q));
+	return 0;
+}
